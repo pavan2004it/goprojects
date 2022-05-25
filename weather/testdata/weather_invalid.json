@@ -3,14 +3,7 @@
     "lon": -0.1257,
     "lat": 51.5085
   },
-  "weather": [
-    {
-      "id": 801,
-      "main": "Clouds",
-      "description": "few clouds",
-      "icon": "02d"
-    }
-  ],
+  "weather": [],
   "base": "stations",
   "main": {
     "temp": 284.1,
