@@ -1,14 +1,14 @@
-package count_test
+package counter_test
 
 import (
 	"bytes"
-	"count"
+	"counter"
 	"testing"
 )
 
 func TestCounterInitial(t *testing.T) {
 	t.Parallel()
-	c := count.Counter{}
+	c := counter.Counter{}
 	want := 0
 	got := c.Next()
 	if want != got {
@@ -18,7 +18,7 @@ func TestCounterInitial(t *testing.T) {
 
 func TestCounterMultiple(t *testing.T) {
 	t.Parallel()
-	c := count.Counter{}
+	c := counter.Counter{}
 	want := 1
 	c.Next()
 	got := c.Next()
@@ -28,7 +28,7 @@ func TestCounterMultiple(t *testing.T) {
 }
 
 func TestSetCounterValue(t *testing.T) {
-	c := count.Counter{}
+	c := counter.Counter{}
 	want := 10
 	got := c.SetValue(want)
 	if want != got {
@@ -39,7 +39,7 @@ func TestSetCounterValue(t *testing.T) {
 func TestRun(t *testing.T) {
 	t.Parallel()
 	fakeTerminal := &bytes.Buffer{}
-	p := &count.Counter{Output: fakeTerminal}
+	p := &counter.Counter{Output: fakeTerminal}
 	p.RunWait()
 	want := "1\n"
 	got := fakeTerminal.String()
@@ -52,7 +52,7 @@ func TestRun(t *testing.T) {
 //func TestWaitRun(t *testing.T) {
 //	t.Parallel()
 //	fakeTerminal := &bytes.Buffer{}
-//	p := &count.Counter{Output: fakeTerminal}
+//	p := &counter.Counter{Output: fakeTerminal}
 //	p.RunWait()
 //	want := "1\n" +
 //		"2\n" +

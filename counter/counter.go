@@ -1,4 +1,4 @@
-package count
+package counter
 
 import (
 	"fmt"
