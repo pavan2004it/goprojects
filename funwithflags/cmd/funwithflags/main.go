@@ -1,1 +1,9 @@
-package funwithflags
+package main
+
+import (
+	"funwithflags"
+)
+
+func main() {
+	funwithflags.FlagParse()
+}
