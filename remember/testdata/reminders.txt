@@ -1,0 +1,5 @@
+buy milk
+buy chicken
+buy wine
+buy salt
+buy vinegar
