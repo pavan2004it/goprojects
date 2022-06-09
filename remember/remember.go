@@ -32,7 +32,7 @@ func NewReminder(opts ...option) (reminder, error) {
 
 func (r reminder) StoreReminder() (int, error) {
 	bytesWritten := 0
-	f, err := os.OpenFile("/Users/pavankumar/goprojects/remember/testdata/reminders.txt", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	f, err := os.OpenFile("testdata/reminders.txt", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	if err != nil {
 		return 0, err
 	}
@@ -45,7 +45,7 @@ func (r reminder) StoreReminder() (int, error) {
 }
 
 func (r reminder) PrintReminders() string {
-	f, err := os.Open("/Users/pavankumar/goprojects/remember/testdata/reminders.txt")
+	f, err := os.Open("testdata/reminders.txt")
 	if err != nil {
 		panic(err)
 	}
