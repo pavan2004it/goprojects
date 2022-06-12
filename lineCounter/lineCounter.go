@@ -11,10 +11,12 @@ import (
 )
 
 type counter struct {
-	wordCount bool
 	input     io.Reader
 	output    io.Writer
 	verbose   bool
+	wordCount bool
+	byteCount bool
+	lineCount bool
 }
 
 type option func(*counter) error
@@ -43,6 +45,8 @@ func FromArgs(args []string) option {
 		fset := flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
 		wordCount := fset.Bool("w", false, "Count words instead of lines")
 		verbose := fset.Bool("v", false, "Print Words or lines with more verbosity")
+		byteCount := fset.Bool("b", false, "Count bytes instead of lines")
+		lineCount := fset.Bool("l", false, "Count lines instead of lines")
 		fset.SetOutput(c.output)
 		err := fset.Parse(args)
 		if err != nil {
@@ -50,6 +54,8 @@ func FromArgs(args []string) option {
 		}
 		c.wordCount = *wordCount
 		c.verbose = *verbose
+		c.byteCount = *byteCount
+		c.lineCount = *lineCount
 		args = fset.Args()
 		if len(args) < 1 {
 			return nil
@@ -60,7 +66,6 @@ func FromArgs(args []string) option {
 		}
 
 		c.input = f
-
 		return nil
 	}
 }
@@ -90,6 +95,7 @@ func Lines() int {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
+
 	return c.Lines()
 }
 
@@ -103,6 +109,16 @@ func (c counter) Words() int {
 	return words
 }
 
+func (c counter) Bytes() int {
+	bytes := 0
+	scanner := bufio.NewScanner(c.input)
+	scanner.Split(bufio.ScanBytes)
+	for scanner.Scan() {
+		bytes++
+	}
+	return bytes
+}
+
 func Words() int {
 	c, err := NewCounter(FromArgs(os.Args[1:]))
 	if err != nil {
@@ -113,34 +129,42 @@ func Words() int {
 }
 
 func RunCLI() {
-	c, err := NewCounter(
-		FromArgs(os.Args[1:]),
-	)
+	c, err := NewCounter(FromArgs(os.Args[1:]))
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 
-	//if c.wordCount && c.verbose {
-	//	fmt.Println(strconv.Itoa(c.Words()) + " words")
-	//} else if c.verbose {
-	//	fmt.Println(strconv.Itoa(c.Lines()) + " lines")
-	//}
-	//
-	//if c.wordCount {
-	//	fmt.Println(c.Words())
-	//} else {
-	//	fmt.Println(c.Lines())
-	//}
-
 	switch {
 
-	case c.wordCount && c.verbose:
+	case c.wordCount && c.byteCount:
 		fmt.Println(strconv.Itoa(c.Words()) + " words")
+		c, _ = NewCounter(FromArgs(os.Args[1:]))
+		fmt.Println(strconv.Itoa(c.Bytes()) + " bytes")
+
+	case c.wordCount && c.lineCount:
+		fmt.Println(strconv.Itoa(c.Words()) + " words")
+		c, _ = NewCounter(FromArgs(os.Args[1:]))
+		fmt.Println(strconv.Itoa(c.Lines()) + " lines")
+
+	case c.byteCount && c.lineCount:
+		fmt.Println(strconv.Itoa(c.Bytes()) + " bytes")
+		c, _ = NewCounter(FromArgs(os.Args[1:]))
+		fmt.Println(strconv.Itoa(c.Lines()) + " lines")
+
+	case c.wordCount && c.verbose:
+		c.Words()
+		fmt.Println(strconv.Itoa(c.Words()) + " words")
+
 	case c.verbose:
 		fmt.Println(strconv.Itoa(c.Lines()) + " lines")
+
 	case c.wordCount:
 		fmt.Println(c.Words())
+
+	case c.byteCount:
+		fmt.Println(c.Bytes())
+
 	default:
 		fmt.Println(c.Lines())
 	}

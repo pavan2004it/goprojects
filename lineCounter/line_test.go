@@ -99,3 +99,30 @@ func TestFromArgsErrorsOnBogusFlag(t *testing.T) {
 		t.Fatal("want error on bogus flag, got nil")
 	}
 }
+
+func TestBytes(t *testing.T) {
+	t.Parallel()
+	inputBuf := bytes.NewBufferString("1\n2 words\n3 this time")
+	c, err := lineCounter.NewCounter(lineCounter.WithInput(inputBuf))
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := 21
+	got := c.Bytes()
+
+	if want != got {
+		t.Errorf("want %d, got %d", want, got)
+	}
+
+}
+
+//func TestByteWordError(t *testing.T) {
+//	t.Parallel()
+//	args := []string{"-w", "-b", "testdata/three_lines.txt"}
+//	_, err := lineCounter.NewCounter(
+//		lineCounter.FromArgs(args),
+//	)
+//	if err == nil {
+//		t.Fatal("want error on -w and -b, got nil")
+//	}
+//}
