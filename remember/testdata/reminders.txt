@@ -3,3 +3,4 @@ buy chicken
 buy wine
 buy salt
 buy vinegar
+buy groceries
