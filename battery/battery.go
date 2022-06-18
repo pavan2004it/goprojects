@@ -1,6 +1,12 @@
 package battery
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+	"os/exec"
+	"regexp"
+	"strconv"
+)
 
 type Battery struct {
 	Name             string
@@ -18,29 +24,29 @@ func (b Battery) ToJSON() string {
 	return string(output)
 }
 
-//type Status struct {
-//	ChargePercent int
-//}
-//
-//var pmsetOutput = regexp.MustCompile("(\\d+)%")
-//
-//func ParsePmsetOutput(data string) (Status, error) {
-//	matches := pmsetOutput.FindStringSubmatch(data)
-//	if len(matches) < 2 {
-//		return Status{}, fmt.Errorf("failed to parse pmset output: %q", data)
-//	}
-//	charge, err := strconv.Atoi(matches[1])
-//	if err != nil {
-//		return Status{}, fmt.Errorf("failed to parse charge percentage: %q", matches[1])
-//	}
-//	return Status{ChargePercent: charge}, nil
-//}
-//
-//func GetPmsetOutput() (string, error) {
-//	data, err := exec.Command("/usr/bin/pmset", "-g", "ps").
-//		CombinedOutput()
-//	if err != nil {
-//		return "", err
-//	}
-//	return string(data), nil
-//}
+type Status struct {
+	ChargePercent int
+}
+
+var pmsetOutput = regexp.MustCompile("(\\d+)%")
+
+func ParsePmsetOutput(data string) (Status, error) {
+	matches := pmsetOutput.FindStringSubmatch(data)
+	if len(matches) < 2 {
+		return Status{}, fmt.Errorf("failed to parse pmset output: %q", data)
+	}
+	charge, err := strconv.Atoi(matches[1])
+	if err != nil {
+		return Status{}, fmt.Errorf("failed to parse charge percentage: %q", matches[1])
+	}
+	return Status{ChargePercent: charge}, nil
+}
+
+func GetPmsetOutput() (string, error) {
+	data, err := exec.Command("/usr/bin/pmset", "-g", "ps").
+		CombinedOutput()
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
