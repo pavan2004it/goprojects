@@ -43,7 +43,7 @@ func TestNewSession(t *testing.T) {
 		Stdout: stdout,
 		Stderr: stderr,
 	}
-	got := *shell.NewSession(stdin, stdout, stderr)
+	got := *shell.NewSession(stdin, stdout, stderr, false)
 	if want != got {
 		t.Errorf("want %#v, got %#v", want, got)
 	}
@@ -53,12 +53,21 @@ func TestRun(t *testing.T) {
 	t.Parallel()
 	stdin := strings.NewReader("echo hello\n\n")
 	stdout := &bytes.Buffer{}
-	session := shell.NewSession(stdin, stdout, io.Discard)
+	session := shell.NewSession(stdin, stdout, io.Discard, false)
 	session.DryRun = true
 	session.Run()
 	want := "> echo hello\n> > \nBe seeing you!\n"
 	got := stdout.String()
 	if !cmp.Equal(want, got) {
 		t.Error(cmp.Diff(want, got))
+	}
+}
+
+func TestGeneratePrompt(t *testing.T) {
+	t.Parallel()
+	want := "/Users/pavankumar/goprojects/shell "
+	got := shell.GeneratePrompt()
+	if want != got {
+		t.Errorf("want %q, got %q", want, got)
 	}
 }

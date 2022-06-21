@@ -1,0 +1,9 @@
+Number of Go Files -- 27952
+
+total 24
+drwxr-xr-x  3 pavankumar  staff   96 Jun 18 18:22 cmd
+-rw-r--r--  1 pavankumar  staff   24 Jun 18 11:44 go.mod
+drwxr-xr-x  3 pavankumar  staff   96 Jun 20 09:48 testdata
+-rw-r--r--  1 pavankumar  staff   16 Jun 19 09:56 utility.go
+-rw-r--r--  1 pavankumar  staff  222 Jun 19 08:58 utility_test.go
+

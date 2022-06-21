@@ -1,25 +1,17 @@
 package main
 
-import "shell"
+import (
+	"os/exec"
+	"shell"
+	"strings"
+)
 
 func main() {
-	//input := bufio.NewReader(os.Stdin)
-	//for {
-	//	fmt.Print(">")
-	//	line, err := input.ReadString('\n')
-	//	if err != nil {
-	//		fmt.Println("\nBe seeing you!")
-	//		break
-	//	}
-	//	cmd, err := shell.CmdFromString(line)
-	//	if err != nil {
-	//		continue
-	//	}
-	//	out, err := cmd.CombinedOutput()
-	//	if err != nil {
-	//		fmt.Println("error:", err)
-	//	}
-	//	fmt.Printf("%s", out)
-	//}
-	shell.RunCLI()
+	//shell.RunCLI()
+	shell.RunCliWithInteractive(GeneratePrompt)
+}
+
+func GeneratePrompt() string {
+	output, _ := exec.Command("pwd").Output()
+	return string(strings.TrimSuffix(string(output), "\n")) + " # "
 }
