@@ -48,7 +48,7 @@ func NewGreetCommand() *cobra.Command {
 	}
 	cmd.AddCommand(NewGreetCapsCommand())
 	greeting := NewGreetCon(WithGreeting("Hello World"))
-	cmd.PersistentFlags().StringVarP(&greeting.greeting, "greeting", "g", "Hello", "Greeting")
+	cmd.PersistentFlags().StringVarP(&greeting.greeting, "greeting", "g", "Hello", "Greeting flag")
 	bindErr := viper.BindPFlag("greeting", cmd.PersistentFlags().Lookup("greeting"))
 	if bindErr != nil {
 		log.Fatal(bindErr)

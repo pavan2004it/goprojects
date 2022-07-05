@@ -12,7 +12,7 @@ func TestGreet(t *testing.T) {
 	greetCmd := greet.NewGreetCommand()
 	b := bytes.NewBufferString("")
 	greetCmd.SetOut(b)
-	greetCmd.SetArgs([]string{"--greeting", "Hello"})
+	greetCmd.SetArgs([]string{"-g", "Hello"})
 	err := greetCmd.Execute()
 	if err != nil {
 		t.Fatal(err)
@@ -30,11 +30,11 @@ func TestGreet(t *testing.T) {
 
 func TestGreetCaps(t *testing.T) {
 	t.Parallel()
-	greetCmd := greet.NewGreetCapsCommand()
+	greetCapsCmd := greet.NewGreetCapsCommand()
 	b := bytes.NewBufferString("")
-	greetCmd.SetOut(b)
-	greetCmd.SetArgs([]string{"--greeting", "Hello", "caps"})
-	err := greetCmd.Execute()
+	greetCapsCmd.SetOut(b)
+	greetCapsCmd.SetArgs([]string{"caps"})
+	err := greetCapsCmd.Execute()
 	if err != nil {
 		t.Fatal(err)
 	}
