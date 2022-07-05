@@ -11,6 +11,10 @@ import (
 	"log"
 )
 
+type orgConfig struct {
+	orgName string
+}
+
 var CmdOrg = &cobra.Command{
 	Use:   "projects",
 	Short: "Lists All the projects in an Organization",
@@ -40,4 +44,13 @@ var CmdOrg = &cobra.Command{
 		}
 
 	},
+}
+
+func init() {
+	orgConfig := &orgConfig{orgName: ""}
+	CmdOrg.PersistentFlags().StringVarP(&orgConfig.orgName, "org", "o", "", "org name")
+	bindErr := viper.BindPFlag("org", CmdOrg.PersistentFlags().Lookup("org"))
+	if bindErr != nil {
+		log.Fatal(bindErr)
+	}
 }
