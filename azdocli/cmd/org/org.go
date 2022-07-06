@@ -19,7 +19,6 @@ type orgConfig struct {
 func ListProjects(cmd *cobra.Command, args []string) error {
 	configErr := viper.ReadInConfig()
 	if configErr != nil {
-		fmt.Println("Config error")
 		log.Fatal(configErr)
 	}
 	organizationUrl := "https://dev.azure.com/" + viper.GetString("org") // todo: replace value with your organization url
