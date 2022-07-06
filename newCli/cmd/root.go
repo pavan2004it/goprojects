@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"newCli/cmd/boolf"
 	"newCli/cmd/greet"
 	"os"
 )
@@ -20,6 +21,6 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.AddCommand(greet.NewGreetCommand())
+	rootCmd.AddCommand(greet.NewGreetCommand(), boolf.NewBoolCommand())
 	rootCmd.Version = "0.0.1"
 }
