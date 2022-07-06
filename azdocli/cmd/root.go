@@ -11,14 +11,14 @@ import (
 
 var cfgFile string
 
-var rootCmd = &cobra.Command{
+var RootCmd = &cobra.Command{
 	Use:   "azdocli",
 	Short: "Cli to interact with Azure DevOps API's",
 	Long:  "Cli to run azdo commands",
 }
 
 func Execute() {
-	err := rootCmd.Execute()
+	err := RootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
@@ -26,11 +26,11 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "provide the path for config file else it will be searched in the home directory")
-	rootCmd.AddCommand(org.CmdOrg)
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.SetVersionTemplate("azdocli version: {{.Version}}\n")
-	rootCmd.Version = "0.0.1"
+	RootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "provide the path for config file else it will be searched in the home directory")
+	RootCmd.AddCommand(org.NewCmdOrg())
+	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	RootCmd.SetVersionTemplate("azdocli version: {{.Version}}\n")
+	RootCmd.Version = "0.0.1"
 
 }
 

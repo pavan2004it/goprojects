@@ -9,48 +9,54 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"log"
+	"strconv"
 )
 
 type orgConfig struct {
 	orgName string
 }
 
-var CmdOrg = &cobra.Command{
-	Use:   "projects",
-	Short: "Lists All the projects in an Organization",
-	Long:  "Calling all Org Api's in AZDO",
-	Run: func(cmd *cobra.Command, args []string) {
+func ListProjects(cmd *cobra.Command, args []string) error {
+	configErr := viper.ReadInConfig()
+	if configErr != nil {
+		fmt.Println("Config error")
+		log.Fatal(configErr)
+	}
+	organizationUrl := "https://dev.azure.com/" + viper.GetString("org") // todo: replace value with your organization url
+	personalAccessToken := viper.GetString("PAT_TOKEN")
+	connection := azuredevops.NewPatConnection(organizationUrl, personalAccessToken)
+	ctx := context.Background()
 
-		//viper.SetConfigFile("app.env")
-		configErr := viper.ReadInConfig()
-		if configErr != nil {
-			log.Fatal(configErr)
+	coreClient, err := core.NewClient(ctx, connection)
+	if err != nil {
+		log.Fatal(err)
+	}
+	response, err := coreClient.GetProjects(ctx, core.GetProjectsArgs{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	for i, project := range response.Value {
+		_, err2 := fmt.Fprintf(cmd.OutOrStdout(), strconv.Itoa(i)+" "+*project.Name+"\n")
+		if err2 != nil {
+			return err2
 		}
-		organizationUrl := "https://dev.azure.com/" + viper.GetString("org") // todo: replace value with your organization url
-		personalAccessToken := viper.GetString("PAT_TOKEN")
-		connection := azuredevops.NewPatConnection(organizationUrl, personalAccessToken)
-		ctx := context.Background()
-
-		coreClient, err := core.NewClient(ctx, connection)
-		if err != nil {
-			log.Fatal(err)
-		}
-		response, err := coreClient.GetProjects(ctx, core.GetProjectsArgs{})
-		if err != nil {
-			log.Fatal(err)
-		}
-		for i, project := range response.Value {
-			fmt.Println(i, *project.Name)
-		}
-
-	},
+	}
+	return nil
 }
 
-func init() {
+func NewCmdOrg() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "projects",
+		Short: "Lists All the projects in an Organization",
+		Long:  "Calling all Org Api's in AZDO",
+		RunE:  ListProjects,
+	}
 	orgConfig := &orgConfig{orgName: ""}
-	CmdOrg.PersistentFlags().StringVarP(&orgConfig.orgName, "org", "o", "", "org name")
-	bindErr := viper.BindPFlag("org", CmdOrg.PersistentFlags().Lookup("org"))
+	cmd.AddCommand(NewUserCmd())
+	cmd.PersistentFlags().StringVarP(&orgConfig.orgName, "org", "o", "", "org name")
+	bindErr := viper.BindPFlag("org", cmd.PersistentFlags().Lookup("org"))
 	if bindErr != nil {
 		log.Fatal(bindErr)
 	}
+	return cmd
 }
