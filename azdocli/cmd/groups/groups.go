@@ -32,6 +32,9 @@ func ListGroups(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		log.Fatal(err)
 	}
+	if viper.GetInt("limit") > len(*response.GraphGroups) {
+		viper.Set("limit", len(*response.GraphGroups))
+	}
 
 	for _, group := range (*response.GraphGroups)[:viper.GetInt("limit")] {
 		fmt.Fprintf(cmd.OutOrStdout(), *group.DisplayName+"\n")
@@ -56,7 +59,7 @@ func NewListGroupsCommand() *cobra.Command {
 	gConfig := groupConfig{}
 	cmd.AddCommand(NewProjectGroupsCommand())
 	cmd.PersistentFlags().StringVarP(&gConfig.orgName, "org", "o", "", "org name")
-	cmd.PersistentFlags().IntVarP(&gConfig.limit, "limit", "l", 0, "Result limit")
+	cmd.PersistentFlags().IntVarP(&gConfig.limit, "limit", "l", 10, "Result limit")
 	err := viper.BindPFlag("limit", cmd.PersistentFlags().Lookup("limit"))
 	if err != nil {
 		return nil

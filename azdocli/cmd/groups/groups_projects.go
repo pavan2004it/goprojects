@@ -41,6 +41,9 @@ func ListGroupsInProjects(cmd *cobra.Command, args []string) error {
 			if err != nil {
 				log.Fatal(err)
 			}
+			if viper.GetInt("limit") > len(*groups.GraphGroups) {
+				viper.Set("limit", len(*groups.GraphGroups))
+			}
 			for _, group := range (*groups.GraphGroups)[:viper.GetInt("limit")] {
 				fmt.Fprintf(cmd.OutOrStdout(), *group.DisplayName+"\n")
 			}
