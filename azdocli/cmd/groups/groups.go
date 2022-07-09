@@ -34,7 +34,7 @@ func ListGroups(cmd *cobra.Command, args []string) error {
 	}
 
 	for _, group := range (*response.GraphGroups)[:viper.GetInt("limit")] {
-		fmt.Println(*group.DisplayName)
+		fmt.Fprintf(cmd.OutOrStdout(), *group.DisplayName)
 	}
 
 	return nil

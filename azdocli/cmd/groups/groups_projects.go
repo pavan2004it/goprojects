@@ -42,7 +42,7 @@ func ListGroupsInProjects(cmd *cobra.Command, args []string) error {
 				log.Fatal(err)
 			}
 			for _, group := range (*groups.GraphGroups)[:viper.GetInt("limit")] {
-				fmt.Println(*group.DisplayName)
+				fmt.Fprintf(cmd.OutOrStdout(), *group.DisplayName)
 			}
 		}
 	}

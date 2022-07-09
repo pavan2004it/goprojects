@@ -21,11 +21,9 @@ func ListProjects(cmd *cobra.Command, args []string) error {
 	if configErr != nil {
 		log.Fatal(configErr)
 	}
-	fmt.Println("Org Name: ", viper.GetString("org"))
 	organizationUrl := "https://dev.azure.com/" + viper.GetString("org") // todo: replace value with your organization url
 	personalAccessToken := viper.GetString("PAT_TOKEN")
 	connection := azuredevops.NewPatConnection(organizationUrl, personalAccessToken)
-	fmt.Println(organizationUrl)
 	ctx := context.Background()
 
 	coreClient, err := core.NewClient(ctx, connection)
@@ -34,7 +32,6 @@ func ListProjects(cmd *cobra.Command, args []string) error {
 	}
 	response, err := coreClient.GetProjects(ctx, core.GetProjectsArgs{})
 	if err != nil {
-		fmt.Println("heer")
 		log.Fatal(err)
 	}
 	for i, project := range response.Value {
