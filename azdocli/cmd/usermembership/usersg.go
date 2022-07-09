@@ -60,9 +60,10 @@ func RegexLogic(key string, data map[string][]string, value string) map[string][
 }
 
 func OutData(data *map[string][]string) {
+	cmd := NewListUserSgCommand()
 	for key, value := range *data {
-		fmt.Println("\nProject: " + key + "\n")
-		fmt.Println("Groups: ")
+		fmt.Fprintf(cmd.OutOrStdout(), "\nProject: "+key+"\n\n")
+		fmt.Fprintf(cmd.OutOrStdout(), "Groups: "+"\n")
 		for _, v := range value {
 			fmt.Println(v)
 		}

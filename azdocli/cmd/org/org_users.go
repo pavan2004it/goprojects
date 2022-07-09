@@ -37,6 +37,9 @@ func NewUserCmd() *cobra.Command {
 		Short: "Lists All Users in the organization",
 		Long:  "Calling User entitlement API",
 		RunE:  ListUsers,
+		PreRun: func(cmd *cobra.Command, args []string) {
+			viper.BindPFlag("org", cmd.Flags().Lookup("org"))
+		},
 	}
 	return cmd
 }
