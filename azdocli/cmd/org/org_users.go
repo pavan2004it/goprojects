@@ -16,7 +16,7 @@ func ListUsers(cmd *cobra.Command, args []string) error {
 	if configErr != nil {
 		log.Fatal(configErr)
 	}
-	organizationUrl := "https://dev.azure.com/" + viper.GetString("org") // todo: replace value with your organization url
+	organizationUrl := "https://dev.azure.com/" + viper.GetString("AZDO_ORG") // todo: replace value with your organization url
 	personalAccessToken := viper.GetString("PAT_TOKEN")
 	connection := azuredevops.NewPatConnection(organizationUrl, personalAccessToken)
 	ctx := context.Background()
@@ -37,9 +37,9 @@ func NewUserCmd() *cobra.Command {
 		Short: "Lists All Users in the organization",
 		Long:  "Calling User entitlement API",
 		RunE:  ListUsers,
-		PreRun: func(cmd *cobra.Command, args []string) {
-			viper.BindPFlag("org", cmd.Flags().Lookup("org"))
-		},
+		//PreRun: func(cmd *cobra.Command, args []string) {
+		//	viper.BindPFlag("org", cmd.Flags().Lookup("org"))
+		//},
 	}
 	return cmd
 }

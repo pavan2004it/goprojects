@@ -21,7 +21,7 @@ func ListGroupsInProjects(cmd *cobra.Command, args []string) error {
 		log.Fatal(configErr)
 	}
 	// Azdo Configuration
-	organizationUrl := "https://dev.azure.com/" + viper.GetString("org") // todo: replace value with your organization url
+	organizationUrl := "https://dev.azure.com/" + viper.GetString("AZDO_ORG")
 	personalAccessToken := viper.GetString("PAT_TOKEN")
 	connection := azuredevops.NewPatConnection(organizationUrl, personalAccessToken)
 	ctx := context.Background()

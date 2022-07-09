@@ -12,7 +12,7 @@ func TestListGroupCmd(t *testing.T) {
 	b := bytes.NewBufferString("")
 	groupCmd := groups.NewListGroupsCommand()
 	groupCmd.SetOut(b)
-	groupCmd.SetArgs([]string{"-o", "pavantikkani"})
+	groupCmd.SetArgs([]string{"-l", "1"})
 	err := groupCmd.Execute()
 	if err != nil {
 		t.Fatal(err)

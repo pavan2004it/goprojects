@@ -30,7 +30,7 @@ func TestProjectCommand(t *testing.T) {
 	projectCmd := org.NewCmdOrg()
 	b := bytes.NewBufferString("")
 	projectCmd.SetOut(b)
-	projectCmd.SetArgs([]string{"-o", "pavantikkani"})
+	projectCmd.SetArgs([]string{""})
 	err := projectCmd.Execute()
 	if err != nil {
 		t.Fatal(err)

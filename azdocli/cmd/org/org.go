@@ -12,16 +12,12 @@ import (
 	"strconv"
 )
 
-type orgConfig struct {
-	orgName string
-}
-
 func ListProjects(cmd *cobra.Command, args []string) error {
 	configErr := viper.ReadInConfig()
 	if configErr != nil {
 		log.Fatal(configErr)
 	}
-	organizationUrl := "https://dev.azure.com/" + viper.GetString("org") // todo: replace value with your organization url
+	organizationUrl := "https://dev.azure.com/" + viper.GetString("AZDO_ORG") // todo: replace value with your organization url
 	personalAccessToken := viper.GetString("PAT_TOKEN")
 	connection := azuredevops.NewPatConnection(organizationUrl, personalAccessToken)
 	ctx := context.Background()
@@ -49,16 +45,7 @@ func NewCmdOrg() *cobra.Command {
 		Short: "Lists All the projects in an Organization",
 		Long:  "Calling all Org Api's in AZDO",
 		RunE:  ListProjects,
-		PreRun: func(cmd *cobra.Command, args []string) {
-			bindErr := viper.BindPFlag("org", cmd.PersistentFlags().Lookup("org"))
-			if bindErr != nil {
-				log.Fatal(bindErr)
-			}
-		},
 	}
-	orgConfig := &orgConfig{orgName: "pavantikkani"}
 	cmd.AddCommand(NewUserCmd())
-	cmd.PersistentFlags().StringVarP(&orgConfig.orgName, "org", "o", "", "org name")
-	cmd.MarkPersistentFlagRequired("org")
 	return cmd
 }

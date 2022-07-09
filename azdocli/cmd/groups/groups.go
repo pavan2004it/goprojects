@@ -20,7 +20,7 @@ func ListGroups(cmd *cobra.Command, args []string) error {
 	if configErr != nil {
 		log.Fatal(configErr)
 	}
-	organizationUrl := "https://dev.azure.com/" + viper.GetString("org") // todo: replace value with your organization url
+	organizationUrl := "https://dev.azure.com/" + viper.GetString("AZDO_ORG")
 	personalAccessToken := viper.GetString("PAT_TOKEN")
 	connection := azuredevops.NewPatConnection(organizationUrl, personalAccessToken)
 	ctx := context.Background()
@@ -49,21 +49,13 @@ func NewListGroupsCommand() *cobra.Command {
 		Short: "List Security Groups",
 		Long:  "Lists Security Groups for an Organization",
 		RunE:  ListGroups,
-		PreRun: func(cmd *cobra.Command, args []string) {
-			orgErr := viper.BindPFlag("org", cmd.PersistentFlags().Lookup("org"))
-			if orgErr != nil {
-				log.Fatal(orgErr)
-			}
-		},
 	}
 	gConfig := groupConfig{}
 	cmd.AddCommand(NewProjectGroupsCommand())
-	cmd.PersistentFlags().StringVarP(&gConfig.orgName, "org", "o", "", "org name")
 	cmd.PersistentFlags().IntVarP(&gConfig.limit, "limit", "l", 10, "Result limit")
 	err := viper.BindPFlag("limit", cmd.PersistentFlags().Lookup("limit"))
 	if err != nil {
 		return nil
 	}
-	cmd.MarkPersistentFlagRequired("org")
 	return cmd
 }

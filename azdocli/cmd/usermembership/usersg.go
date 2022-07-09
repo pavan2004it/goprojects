@@ -14,7 +14,6 @@ import (
 )
 
 type userConfig struct {
-	orgName  string
 	username string
 }
 
@@ -24,7 +23,7 @@ func ListUserSg(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-	organizationUrl := "https://dev.azure.com/" + viper.GetString("orz")
+	organizationUrl := "https://dev.azure.com/" + viper.GetString("AZDO_ORG")
 	personalAccessToken := viper.GetString("PAT_TOKEN")
 	connection := azuredevops.NewPatConnection(organizationUrl, personalAccessToken)
 	ctx := context.Background()
@@ -79,18 +78,10 @@ func NewListUserSgCommand() *cobra.Command {
 		Short: "List Security Groups",
 		Long:  "Lists Security Groups for an Organization",
 		RunE:  ListUserSg,
-		PreRun: func(cmd *cobra.Command, args []string) {
-			err := viper.BindPFlag("orz", cmd.Flags().Lookup("org"))
-			if err != nil {
-				log.Fatal(err)
-			}
-		},
 	}
 	userCfg := userConfig{}
-	cmd.Flags().StringVarP(&userCfg.orgName, "org", "o", "", "org name")
 	cmd.Flags().StringVarP(&userCfg.username, "user", "u", "", "username")
 	cmd.MarkFlagRequired("user")
-	cmd.MarkFlagRequired("orz")
 	err := viper.BindPFlag("user", cmd.Flags().Lookup("user"))
 	if err != nil {
 		log.Fatal(err)
