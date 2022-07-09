@@ -58,9 +58,6 @@ func NewProjectGroupsCommand() *cobra.Command {
 		Short: "List Security Groups in a Project",
 		Long:  "Lists Security Groups for a project in an organization",
 		RunE:  ListGroupsInProjects,
-		PreRun: func(cmd *cobra.Command, args []string) {
-			viper.BindPFlag("org", cmd.Flags().Lookup("org"))
-		},
 	}
 	projectConfig := pConfig{}
 	cmd.Flags().StringVarP(&projectConfig.project, "project", "p", "", "project name")
