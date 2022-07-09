@@ -2,6 +2,7 @@ package usermembership
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/microsoft/azure-devops-go-api/azuredevops"
 	"github.com/microsoft/azure-devops-go-api/azuredevops/graph"
@@ -42,6 +43,11 @@ func ListUserSg(cmd *cobra.Command, args []string) error {
 				RegexLogic(*groupDetails.PrincipalName, sg, *groupDetails.DisplayName)
 			}
 			OutData(&sg)
+		}
+	}
+	for _, member := range *members.Members {
+		if *member.User.PrincipalName != viper.GetString("user") {
+			return errors.New("user not found")
 		}
 	}
 	return nil
