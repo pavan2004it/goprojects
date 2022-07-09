@@ -43,14 +43,10 @@ func ListUserSg(cmd *cobra.Command, args []string) error {
 				RegexLogic(*groupDetails.PrincipalName, sg, *groupDetails.DisplayName)
 			}
 			OutData(&sg)
+			return nil
 		}
 	}
-	for _, member := range *members.Members {
-		if *member.User.PrincipalName != viper.GetString("user") {
-			return errors.New("user not found")
-		}
-	}
-	return nil
+	return errors.New("user not found")
 }
 
 func RegexLogic(key string, data map[string][]string, value string) map[string][]string {
