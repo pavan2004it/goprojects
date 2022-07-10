@@ -41,10 +41,11 @@ func ListProjects(cmd *cobra.Command, args []string) error {
 
 func NewCmdOrg() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "projects",
-		Short: "Lists All the projects in an Organization",
-		Long:  "Calling all Org Api's in AZDO",
-		RunE:  ListProjects,
+		Use:     "projects",
+		Short:   "Lists All the projects in an Organization",
+		Long:    "Calling all Org Api's in AZDO",
+		RunE:    ListProjects,
+		Aliases: []string{"projectlist", "shprojects"},
 	}
 	cmd.AddCommand(NewUserCmd())
 	return cmd

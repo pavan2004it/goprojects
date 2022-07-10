@@ -45,10 +45,11 @@ func ListGroups(cmd *cobra.Command, args []string) error {
 
 func NewListGroupsCommand() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "groupsg",
-		Short: "List Security Groups",
-		Long:  "Lists Security Groups for an Organization",
-		RunE:  ListGroups,
+		Use:     "groupsg",
+		Short:   "List Security Groups",
+		Long:    "Lists Security Groups for an Organization",
+		RunE:    ListGroups,
+		Aliases: []string{"orgsg", "shorgsg"},
 	}
 	gConfig := groupConfig{}
 	cmd.AddCommand(NewProjectGroupsCommand())

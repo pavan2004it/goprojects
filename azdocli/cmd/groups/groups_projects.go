@@ -61,8 +61,10 @@ func NewProjectGroupsCommand() *cobra.Command {
 		PreRun: func(cmd *cobra.Command, args []string) {
 			viper.BindPFlag("project", cmd.Flags().Lookup("project"))
 		},
+		Aliases: []string{"shprojsg", "psg"},
 	}
 	projectConfig := pConfig{}
 	cmd.Flags().StringVarP(&projectConfig.project, "project", "p", "", "project name")
+	cmd.MarkFlagRequired("project")
 	return cmd
 }

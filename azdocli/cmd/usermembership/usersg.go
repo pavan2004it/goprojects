@@ -76,6 +76,7 @@ func NewListUserSgCommand() *cobra.Command {
 		PreRun: func(cmd *cobra.Command, args []string) {
 			viper.BindPFlag("user", cmd.Flags().Lookup("user"))
 		},
+		Aliases: []string{"showaccess"},
 	}
 	userCfg := userConfig{}
 	cmd.Flags().StringVarP(&userCfg.username, "user", "u", "", "username")

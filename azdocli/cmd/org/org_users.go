@@ -33,10 +33,11 @@ func ListUsers(cmd *cobra.Command, args []string) error {
 
 func NewUserCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "users",
-		Short: "Lists All Users in the organization",
-		Long:  "Calling User entitlement API",
-		RunE:  ListUsers,
+		Use:     "users",
+		Short:   "Lists All Users in the organization",
+		Long:    "Calling User entitlement API",
+		RunE:    ListUsers,
+		Aliases: []string{"userlist", "shusers"},
 	}
 	return cmd
 }
