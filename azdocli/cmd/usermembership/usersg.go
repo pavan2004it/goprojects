@@ -32,7 +32,7 @@ func ListUserSg(cmd *cobra.Command, args []string) error {
 	members, _ := userClient.GetUserEntitlements(ctx, memberentitlementmanagement.GetUserEntitlementsArgs{})
 	for _, member := range *members.Members {
 		if *member.User.PrincipalName == viper.GetString("user") {
-			fmt.Println("\n" + *member.User.DisplayName + " has access to below groups in respective projects:")
+			fmt.Fprintf(cmd.OutOrStdout(), "\n"+*member.User.DisplayName+" has access to below groups in respective projects:"+"\n")
 			groups, err := groupClient.ListMemberships(ctx, graph.ListMembershipsArgs{SubjectDescriptor: member.User.Descriptor})
 			if err != nil {
 				log.Fatal(err)
@@ -41,7 +41,14 @@ func ListUserSg(cmd *cobra.Command, args []string) error {
 				groupDetails, _ := groupClient.GetGroup(ctx, graph.GetGroupArgs{GroupDescriptor: group.ContainerDescriptor})
 				RegexLogic(*groupDetails.PrincipalName, sg, *groupDetails.DisplayName)
 			}
-			OutData(&sg)
+			for key, value := range sg {
+				fmt.Fprintf(cmd.OutOrStdout(), "\nProject: "+key+"\n\n")
+				fmt.Fprintf(cmd.OutOrStdout(), "Groups: "+"\n")
+				for _, v := range value {
+					fmt.Fprintf(cmd.OutOrStdout(), v+"\n")
+				}
+			}
+			sg = map[string][]string{}
 			return nil
 		}
 	}
@@ -60,31 +67,18 @@ func RegexLogic(key string, data map[string][]string, value string) map[string][
 	return data
 }
 
-func OutData(data *map[string][]string) {
-	cmd := NewListUserSgCommand()
-	for key, value := range *data {
-		fmt.Fprintf(cmd.OutOrStdout(), "\nProject: "+key+"\n\n")
-		fmt.Fprintf(cmd.OutOrStdout(), "Groups: "+"\n")
-		for _, v := range value {
-			fmt.Println(v)
-		}
-	}
-	*data = map[string][]string{}
-}
-
 func NewListUserSgCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "usersg",
 		Short: "List Security Groups",
 		Long:  "Lists Security Groups for an Organization",
 		RunE:  ListUserSg,
+		PreRun: func(cmd *cobra.Command, args []string) {
+			viper.BindPFlag("user", cmd.Flags().Lookup("user"))
+
+		},
 	}
 	userCfg := userConfig{}
 	cmd.Flags().StringVarP(&userCfg.username, "user", "u", "", "username")
-	cmd.MarkFlagRequired("user")
-	err := viper.BindPFlag("user", cmd.Flags().Lookup("user"))
-	if err != nil {
-		log.Fatal(err)
-	}
 	return cmd
 }
