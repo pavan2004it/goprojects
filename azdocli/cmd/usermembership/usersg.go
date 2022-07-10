@@ -75,10 +75,10 @@ func NewListUserSgCommand() *cobra.Command {
 		RunE:  ListUserSg,
 		PreRun: func(cmd *cobra.Command, args []string) {
 			viper.BindPFlag("user", cmd.Flags().Lookup("user"))
-
 		},
 	}
 	userCfg := userConfig{}
 	cmd.Flags().StringVarP(&userCfg.username, "user", "u", "", "username")
+	cmd.MarkFlagRequired("user")
 	return cmd
 }
