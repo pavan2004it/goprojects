@@ -55,7 +55,7 @@ func NewCmdOrg() *cobra.Command {
 		PreRun: func(cmd *cobra.Command, args []string) {
 			err := viper.BindPFlag("limit", cmd.Flags().Lookup("limit"))
 			if err != nil {
-				log.Fatal(errors.New("error binding limit flag"))
+				log.Fatal(errors.New("error binding limit flag from org command"))
 			}
 		},
 		Aliases: []string{"projectlist", "shprojects"},

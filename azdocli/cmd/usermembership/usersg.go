@@ -74,7 +74,10 @@ func NewListUserSgCommand() *cobra.Command {
 		Long:  "Lists Security Groups for an Organization",
 		RunE:  ListUserSg,
 		PreRun: func(cmd *cobra.Command, args []string) {
-			viper.BindPFlag("user", cmd.Flags().Lookup("user"))
+			err := viper.BindPFlag("user", cmd.Flags().Lookup("user"))
+			if err != nil {
+				log.Fatal(errors.New("unable to bind flag user in ListUserSgs"), err)
+			}
 		},
 		Aliases: []string{"showaccess"},
 	}

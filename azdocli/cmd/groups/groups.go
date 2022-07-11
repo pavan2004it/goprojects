@@ -46,18 +46,20 @@ func ListGroups(cmd *cobra.Command, args []string) error {
 
 func NewListGroupsCommand() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "ListOrgGroups",
-		Short:   "List Org Security Groups",
-		Long:    "Lists Security Groups for an Organization",
-		RunE:    ListGroups,
+		Use:   "ListOrgGroups",
+		Short: "List Org Security Groups",
+		Long:  "Lists Security Groups for an Organization",
+		RunE:  ListGroups,
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			err := viper.BindPFlag("limit", cmd.PersistentFlags().Lookup("limit"))
+			if err != nil {
+				log.Fatal(errors.New("error binding limit flag from groups command"))
+			}
+		},
 		Aliases: []string{"orgsg", "shorgsg"},
 	}
-	gConfig := groupConfig{}
+	groupConfig := &groupConfig{}
 	cmd.AddCommand(NewProjectGroupsCommand())
-	cmd.PersistentFlags().IntVarP(&gConfig.limit, "limit", "l", 5, "Result limit")
-	err := viper.BindPFlag("limit", cmd.PersistentFlags().Lookup("limit"))
-	if err != nil {
-		log.Fatal(errors.New("error binding limit flag"))
-	}
+	cmd.PersistentFlags().IntVarP(&groupConfig.limit, "limit", "l", 5, "Result limit")
 	return cmd
 }
