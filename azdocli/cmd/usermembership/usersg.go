@@ -70,7 +70,7 @@ func RegexLogic(key string, data map[string][]string, value string) map[string][
 func NewListUserSgCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "usersg",
-		Short: "List Security Groups",
+		Short: "List Security Groups for a user",
 		Long:  "Lists Security Groups for an Organization",
 		RunE:  ListUserSg,
 		PreRun: func(cmd *cobra.Command, args []string) {
