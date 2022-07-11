@@ -46,7 +46,7 @@ func ListGroups(cmd *cobra.Command, args []string) error {
 
 func NewListGroupsCommand() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "groupsg",
+		Use:     "ListOrgGroups",
 		Short:   "List Org Security Groups",
 		Long:    "Lists Security Groups for an Organization",
 		RunE:    ListGroups,

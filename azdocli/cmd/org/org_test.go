@@ -25,17 +25,17 @@ func TestRootCommand(t *testing.T) {
 
 }
 
-func TestProjectCommand(t *testing.T) {
+func TestListProjectsCommand(t *testing.T) {
 	t.Parallel()
 	projectCmd := org.NewCmdOrg()
 	b := bytes.NewBufferString("")
 	projectCmd.SetOut(b)
-	projectCmd.SetArgs([]string{""})
+	projectCmd.SetArgs([]string{"-l", "2"})
 	err := projectCmd.Execute()
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := "0 Docker\n1 InfrastructureAsCode\n2 MyFirstProject\n3 gameoflife\n"
+	want := "0 GoProjects\n1 Docker\n"
 	got, err := ioutil.ReadAll(b)
 	if err != nil {
 		t.Fatal(err)
@@ -44,24 +44,4 @@ func TestProjectCommand(t *testing.T) {
 		t.Fatalf("expected %q got %q", want, string(got))
 	}
 
-}
-
-func TestUserCommand(t *testing.T) {
-	t.Parallel()
-	userCmd := org.NewUserCmd()
-	b := bytes.NewBufferString("")
-	userCmd.SetOut(b)
-	userCmd.SetArgs([]string{"users"})
-	err := userCmd.Execute()
-	if err != nil {
-		t.Fatal(err)
-	}
-	want := "glaringfireball@gmail.com\npavan_2004it@hotmail.com\npavan2004it@gmail.com\n"
-	got, err := ioutil.ReadAll(b)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if string(got) != want {
-		t.Fatalf("expected %q got %q", want, string(got))
-	}
 }

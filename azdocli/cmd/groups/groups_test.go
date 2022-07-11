@@ -36,7 +36,7 @@ func TestListProjectSGCmd(t *testing.T) {
 	projectCmd := groups.NewProjectGroupsCommand()
 	b := bytes.NewBufferString("")
 	projectCmd.SetOut(b)
-	projectCmd.SetArgs([]string{"projectsg", "-p", "Docker"})
+	projectCmd.SetArgs([]string{"-p", "Docker"})
 	err := projectCmd.Execute()
 	if err != nil {
 		t.Fatal(err)

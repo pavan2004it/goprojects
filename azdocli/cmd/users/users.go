@@ -1,4 +1,4 @@
-package org
+package users
 
 import (
 	"context"
@@ -33,7 +33,7 @@ func ListUsers(cmd *cobra.Command, args []string) error {
 
 func NewUserCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "users",
+		Use:     "ListUsers",
 		Short:   "Lists All Users in the organization",
 		Long:    "Calling User entitlement API",
 		RunE:    ListUsers,
