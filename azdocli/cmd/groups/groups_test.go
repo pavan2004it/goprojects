@@ -34,6 +34,7 @@ func TestListGroupCmd(t *testing.T) {
 func TestListProjectSGCmd(t *testing.T) {
 	t.Parallel()
 	projectCmd := groups.NewProjectGroupsCommand()
+
 	b := bytes.NewBufferString("")
 	projectCmd.SetOut(b)
 	projectCmd.SetArgs([]string{"-p", "Docker"})

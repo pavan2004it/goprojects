@@ -68,9 +68,6 @@ func NewProjectGroupsCommand() *cobra.Command {
 				log.Fatal(errors.New("failed to bind flag project in the command ListProjectGroups"))
 			}
 		},
-		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			cmd.Parent().PersistentPreRun(cmd.Parent(), args)
-		},
 		Aliases: []string{"shprojsg", "psg"},
 	}
 	projectConfig := pConfig{}
@@ -81,9 +78,5 @@ func NewProjectGroupsCommand() *cobra.Command {
 		log.Fatal(errors.New("failed to mark flag project as required"))
 	}
 
-	err = viper.BindPFlag("project", cmd.Flags().Lookup("project"))
-	if err != nil {
-		log.Fatal(errors.New("failed to bind flag project in the command projectsg"))
-	}
 	return cmd
 }
