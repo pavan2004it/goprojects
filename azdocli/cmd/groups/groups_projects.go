@@ -2,6 +2,7 @@ package groups
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/microsoft/azure-devops-go-api/azuredevops"
 	"github.com/microsoft/azure-devops-go-api/azuredevops/core"
@@ -45,7 +46,10 @@ func ListGroupsInProjects(cmd *cobra.Command, args []string) error {
 				viper.Set("limit", len(*groups.GraphGroups))
 			}
 			for _, group := range (*groups.GraphGroups)[:viper.GetInt("limit")] {
-				fmt.Fprintf(cmd.OutOrStdout(), *group.DisplayName+"\n")
+				_, err2 := fmt.Fprintf(cmd.OutOrStdout(), *group.DisplayName+"\n")
+				if err2 != nil {
+					return err2
+				}
 			}
 		}
 	}
@@ -59,12 +63,18 @@ func NewProjectGroupsCommand() *cobra.Command {
 		Long:  "Lists Security Groups for a project in an organization",
 		RunE:  ListGroupsInProjects,
 		PreRun: func(cmd *cobra.Command, args []string) {
-			viper.BindPFlag("project", cmd.Flags().Lookup("project"))
+			err := viper.BindPFlag("project", cmd.Flags().Lookup("project"))
+			if err != nil {
+				log.Fatal(errors.New("failed to bind flag project in the command projectsg"))
+			}
 		},
 		Aliases: []string{"shprojsg", "psg"},
 	}
 	projectConfig := pConfig{}
 	cmd.Flags().StringVarP(&projectConfig.project, "project", "p", "", "project name")
-	cmd.MarkFlagRequired("project")
+	err := cmd.MarkFlagRequired("project")
+	if err != nil {
+		log.Fatal(errors.New("failed to mark flag project as required"))
+	}
 	return cmd
 }
