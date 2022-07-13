@@ -53,6 +53,7 @@ func NewLogInfoCmd() *cobra.Command {
 	cmd.Flags().IntVarP(&buildId, "buildId", "b", 0, "Build Id")
 	cmd.Flags().IntVarP(&limit, "limit", "l", 10, "Limit")
 	err := cmd.MarkFlagRequired("project")
+	cmd.MarkFlagRequired("buildId")
 	if err != nil {
 		log.Fatal(errors.New("unable to mark project flag as required"))
 	}
