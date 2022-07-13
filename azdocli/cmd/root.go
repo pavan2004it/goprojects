@@ -3,6 +3,7 @@ package cmd
 import (
 	buildInfo "azdocli/cmd/BuildInfo"
 	"azdocli/cmd/groups"
+	"azdocli/cmd/listLogs"
 	"azdocli/cmd/org"
 	"azdocli/cmd/usermembership"
 	"azdocli/cmd/users"
@@ -31,7 +32,12 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 	RootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "provide the path for config file else it will be searched in the home directory")
-	RootCmd.AddCommand(org.NewCmdOrg(), groups.NewListGroupsCommand(), usermembership.NewListUserSgCommand(), users.NewUserCmd(), buildInfo.NewListBuildCmd())
+	RootCmd.AddCommand(org.NewCmdOrg(),
+		groups.NewListGroupsCommand(),
+		usermembership.NewListUserSgCommand(),
+		users.NewUserCmd(), buildInfo.NewListBuildCmd(),
+		listLogs.NewLogInfoCmd(),
+	)
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	RootCmd.SetVersionTemplate("azdocli version: {{.Version}}\n")
 	RootCmd.Version = "0.0.1"

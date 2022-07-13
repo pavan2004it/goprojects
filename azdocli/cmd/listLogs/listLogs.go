@@ -1,4 +1,4 @@
-package buildInfo
+package listLogs
 
 import (
 	"context"
@@ -13,9 +13,10 @@ import (
 )
 
 var project string
+var buildId int
 var limit int
 
-func ListBuilds(cmd *cobra.Command, args []string) error {
+func ListLogInfo(cmd *cobra.Command, args []string) error {
 	configErr := viper.ReadInConfig()
 	if configErr != nil {
 		log.Fatal(configErr)
@@ -25,22 +26,22 @@ func ListBuilds(cmd *cobra.Command, args []string) error {
 	connection := azuredevops.NewPatConnection(organizationUrl, personalAccessToken)
 	ctx := context.Background()
 	buildClient, _ := build.NewClient(ctx, connection)
-	buildResponse, _ := buildClient.GetBuilds(ctx, build.GetBuildsArgs{Project: &project})
-	if viper.GetInt("limit") > len(buildResponse.Value) {
-		viper.Set("limit", len(buildResponse.Value))
+	logRes, _ := buildClient.GetBuildLogs(ctx, build.GetBuildLogsArgs{Project: &project, BuildId: &buildId})
+	if viper.GetInt("limit") > len(*logRes) {
+		viper.Set("limit", len(*logRes))
 	}
-	for _, buildInfo := range buildResponse.Value[:viper.GetInt("limit")] {
-		fmt.Fprintf(cmd.OutOrStdout(), "Build Id: "+strconv.Itoa(*buildInfo.Id)+" Build Name: "+*buildInfo.Definition.Name+" Build Time: "+buildInfo.FinishTime.String()+"\n")
+	for _, l := range (*logRes)[:viper.GetInt("limit")] {
+		fmt.Fprintf(cmd.OutOrStdout(), "Log ID: "+strconv.Itoa(*l.Id)+" Line Count: "+strconv.Itoa(int(*l.LineCount))+" Created on: "+l.CreatedOn.String()+"\n")
 	}
 	return nil
 }
 
-func NewListBuildCmd() *cobra.Command {
+func NewLogInfoCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "ListBuilds",
-		Short: "List Builds",
-		Long:  "List Builds for a project",
-		RunE:  ListBuilds,
+		Use:   "ListLogInfo",
+		Short: "List Log info",
+		Long:  "List log info for a build",
+		RunE:  ListLogInfo,
 		PreRun: func(cmd *cobra.Command, args []string) {
 			err := viper.BindPFlag("limit", cmd.Flags().Lookup("limit"))
 			if err != nil {
@@ -49,10 +50,13 @@ func NewListBuildCmd() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVarP(&project, "project", "p", "", "Project Name")
+	cmd.Flags().IntVarP(&buildId, "buildId", "b", 0, "Build Id")
 	cmd.Flags().IntVarP(&limit, "limit", "l", 10, "Limit")
 	err := cmd.MarkFlagRequired("project")
 	if err != nil {
 		log.Fatal(errors.New("unable to mark project flag as required"))
 	}
+	return cmd
+
 	return cmd
 }
