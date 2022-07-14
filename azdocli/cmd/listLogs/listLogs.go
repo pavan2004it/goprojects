@@ -57,7 +57,6 @@ func NewLogInfoCmd() *cobra.Command {
 	if err != nil {
 		log.Fatal(errors.New("unable to mark project flag as required"))
 	}
-	return cmd
 
 	return cmd
 }
