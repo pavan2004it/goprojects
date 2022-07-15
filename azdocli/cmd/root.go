@@ -2,6 +2,7 @@ package cmd
 
 import (
 	buildInfo "azdocli/cmd/BuildInfo"
+	"azdocli/cmd/getlog"
 	"azdocli/cmd/groups"
 	"azdocli/cmd/listLogs"
 	"azdocli/cmd/org"
@@ -37,6 +38,7 @@ func init() {
 		usermembership.NewListUserSgCommand(),
 		users.NewUserCmd(), buildInfo.NewListBuildCmd(),
 		listLogs.NewLogInfoCmd(),
+		getlog.NewBuildLogCmd(),
 	)
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	RootCmd.SetVersionTemplate("azdocli version: {{.Version}}\n")
