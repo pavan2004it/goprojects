@@ -23,7 +23,7 @@ func GetBuildLog(cmd *cobra.Command, args []string) error {
 	for scanner.Scan() {
 		line := scanner.Text()
 		if strings.Contains(line, cmd.Flags().Lookup("match").Value.String()) {
-			fmt.Println(line)
+			fmt.Fprintf(cmd.OutOrStdout(), line+"\n")
 		}
 	}
 	return nil
