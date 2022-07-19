@@ -1,10 +1,9 @@
 package org
 
 import (
-	"context"
+	"azdocli/pkg/azdoconfig"
 	"errors"
 	"fmt"
-	"github.com/microsoft/azure-devops-go-api/azuredevops"
 	"github.com/microsoft/azure-devops-go-api/azuredevops/core"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -17,14 +16,7 @@ type orgConfig struct {
 }
 
 func ListProjects(cmd *cobra.Command, args []string) error {
-	configErr := viper.ReadInConfig()
-	if configErr != nil {
-		log.Fatal(configErr)
-	}
-	organizationUrl := "https://dev.azure.com/" + viper.GetString("AZDO_ORG") // todo: replace value with your organization url
-	personalAccessToken := viper.GetString("PAT_TOKEN")
-	connection := azuredevops.NewPatConnection(organizationUrl, personalAccessToken)
-	ctx := context.Background()
+	connection, ctx := azdoconfig.AzdoConfig()
 
 	coreClient, err := core.NewClient(ctx, connection)
 	if err != nil {

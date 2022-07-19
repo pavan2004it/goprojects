@@ -1,25 +1,15 @@
 package users
 
 import (
-	"context"
+	"azdocli/pkg/azdoconfig"
 	"fmt"
-	"github.com/microsoft/azure-devops-go-api/azuredevops"
 	"github.com/microsoft/azure-devops-go-api/azuredevops/memberentitlementmanagement"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-	"log"
 )
 
 func ListUsers(cmd *cobra.Command, args []string) error {
 
-	configErr := viper.ReadInConfig()
-	if configErr != nil {
-		log.Fatal(configErr)
-	}
-	organizationUrl := "https://dev.azure.com/" + viper.GetString("AZDO_ORG") // todo: replace value with your organization url
-	personalAccessToken := viper.GetString("PAT_TOKEN")
-	connection := azuredevops.NewPatConnection(organizationUrl, personalAccessToken)
-	ctx := context.Background()
+	connection, ctx := azdoconfig.AzdoConfig()
 	memberClient, _ := memberentitlementmanagement.NewClient(ctx, connection)
 	response, _ := memberClient.GetUserEntitlements(ctx, memberentitlementmanagement.GetUserEntitlementsArgs{})
 	for _, member := range *response.Members {

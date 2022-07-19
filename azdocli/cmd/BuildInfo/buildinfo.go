@@ -1,10 +1,9 @@
 package buildInfo
 
 import (
-	"context"
+	"azdocli/pkg/azdoconfig"
 	"errors"
 	"fmt"
-	"github.com/microsoft/azure-devops-go-api/azuredevops"
 	"github.com/microsoft/azure-devops-go-api/azuredevops/build"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -16,14 +15,7 @@ var project string
 var limit int
 
 func ListBuilds(cmd *cobra.Command, args []string) error {
-	configErr := viper.ReadInConfig()
-	if configErr != nil {
-		log.Fatal(configErr)
-	}
-	organizationUrl := "https://dev.azure.com/" + viper.GetString("AZDO_ORG")
-	personalAccessToken := viper.GetString("PAT_TOKEN")
-	connection := azuredevops.NewPatConnection(organizationUrl, personalAccessToken)
-	ctx := context.Background()
+	connection, ctx := azdoconfig.AzdoConfig()
 	buildClient, _ := build.NewClient(ctx, connection)
 	buildResponse, _ := buildClient.GetBuilds(ctx, build.GetBuildsArgs{Project: &project})
 	if viper.GetInt("limit") > len(buildResponse.Value) {

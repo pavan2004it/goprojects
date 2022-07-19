@@ -1,10 +1,9 @@
 package usermembership
 
 import (
-	"context"
+	"azdocli/pkg/azdoconfig"
 	"errors"
 	"fmt"
-	"github.com/microsoft/azure-devops-go-api/azuredevops"
 	"github.com/microsoft/azure-devops-go-api/azuredevops/graph"
 	"github.com/microsoft/azure-devops-go-api/azuredevops/memberentitlementmanagement"
 	"github.com/spf13/cobra"
@@ -19,16 +18,12 @@ type userConfig struct {
 
 func ListUserSg(cmd *cobra.Command, args []string) error {
 	sg := map[string][]string{}
-	err := viper.ReadInConfig()
+	connection, ctx := azdoconfig.AzdoConfig()
+	userClient, _ := memberentitlementmanagement.NewClient(ctx, connection)
+	groupClient, err := graph.NewClient(ctx, connection)
 	if err != nil {
 		log.Fatal(err)
 	}
-	organizationUrl := "https://dev.azure.com/" + viper.GetString("AZDO_ORG")
-	personalAccessToken := viper.GetString("PAT_TOKEN")
-	connection := azuredevops.NewPatConnection(organizationUrl, personalAccessToken)
-	ctx := context.Background()
-	userClient, _ := memberentitlementmanagement.NewClient(ctx, connection)
-	groupClient, err := graph.NewClient(ctx, connection)
 	members, _ := userClient.GetUserEntitlements(ctx, memberentitlementmanagement.GetUserEntitlementsArgs{})
 	for _, member := range *members.Members {
 		if *member.User.PrincipalName == viper.GetString("user") {

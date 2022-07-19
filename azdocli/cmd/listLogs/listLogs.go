@@ -1,10 +1,9 @@
 package listLogs
 
 import (
-	"context"
+	"azdocli/pkg/azdoconfig"
 	"errors"
 	"fmt"
-	"github.com/microsoft/azure-devops-go-api/azuredevops"
 	"github.com/microsoft/azure-devops-go-api/azuredevops/build"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -17,14 +16,7 @@ var buildId int
 var limit int
 
 func ListLogInfo(cmd *cobra.Command, args []string) error {
-	configErr := viper.ReadInConfig()
-	if configErr != nil {
-		log.Fatal(configErr)
-	}
-	organizationUrl := "https://dev.azure.com/" + viper.GetString("AZDO_ORG")
-	personalAccessToken := viper.GetString("PAT_TOKEN")
-	connection := azuredevops.NewPatConnection(organizationUrl, personalAccessToken)
-	ctx := context.Background()
+	connection, ctx := azdoconfig.AzdoConfig()
 	buildClient, _ := build.NewClient(ctx, connection)
 	logRes, _ := buildClient.GetBuildLogs(ctx, build.GetBuildLogsArgs{Project: &project, BuildId: &buildId})
 	if viper.GetInt("limit") > len(*logRes) {

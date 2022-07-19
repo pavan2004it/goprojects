@@ -1,10 +1,9 @@
 package groups
 
 import (
-	"context"
+	"azdocli/pkg/azdoconfig"
 	"errors"
 	"fmt"
-	"github.com/microsoft/azure-devops-go-api/azuredevops"
 	"github.com/microsoft/azure-devops-go-api/azuredevops/core"
 	"github.com/microsoft/azure-devops-go-api/azuredevops/graph"
 	"github.com/spf13/cobra"
@@ -17,15 +16,7 @@ type pConfig struct {
 }
 
 func ListGroupsInProjects(cmd *cobra.Command, args []string) error {
-	configErr := viper.ReadInConfig()
-	if configErr != nil {
-		log.Fatal(configErr)
-	}
-	// Azdo Configuration
-	organizationUrl := "https://dev.azure.com/" + viper.GetString("AZDO_ORG")
-	personalAccessToken := viper.GetString("PAT_TOKEN")
-	connection := azuredevops.NewPatConnection(organizationUrl, personalAccessToken)
-	ctx := context.Background()
+	connection, ctx := azdoconfig.AzdoConfig()
 
 	// Client Configuration
 	coreClient, err := core.NewClient(ctx, connection)
