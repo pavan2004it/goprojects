@@ -22,7 +22,7 @@ func GetBuildLog(cmd *cobra.Command, args []string) error {
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
 		line := scanner.Text()
-		if strings.Contains(line, cmd.Flags().Lookup("pattern").Value.String()) {
+		if strings.Contains(line, cmd.Flags().Lookup("match").Value.String()) {
 			fmt.Println(line)
 		}
 	}
@@ -39,6 +39,6 @@ func NewBuildLogCmd() *cobra.Command {
 	cmd.Flags().StringVarP(&project, "project", "p", "", "Project Name")
 	cmd.Flags().IntVarP(&buildId, "buildid", "b", 0, "Build Id")
 	cmd.Flags().IntVarP(&logId, "logid", "l", 0, "Log Id")
-	cmd.Flags().StringVarP(&pattern, "pattern", "r", "", "Pattern")
+	cmd.Flags().StringVarP(&pattern, "match", "m", "", "Match pattern")
 	return cmd
 }
