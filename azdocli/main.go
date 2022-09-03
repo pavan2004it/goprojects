@@ -1,7 +1,11 @@
 package main
 
-import "azdocli/cmd"
+import (
+	"azdocli/cmd"
+)
 
 func main() {
+
 	cmd.Execute()
+
 }
