@@ -4,7 +4,7 @@ import (
 	"azdocli/cmd"
 	"azdocli/cmd/BuildInfo"
 	"bytes"
-	"io/ioutil"
+	"io"
 	"testing"
 )
 
@@ -25,7 +25,7 @@ func TestBuildInfoCmd(t *testing.T) {
 		t.Fatal(err)
 	}
 	want := "Build Id: 111 Build Name: Docker CI-CD Build Time: 2021-03-08 10:00:58.9689496 +0000 UTC\nBuild Id: 110 Build Name: Docker CI-CD Build Time: 2021-03-08 08:19:00.9052087 +0000 UTC\n"
-	got, err := ioutil.ReadAll(b)
+	got, err := io.ReadAll(b)
 	if err != nil {
 		t.Fatal(err)
 	}
